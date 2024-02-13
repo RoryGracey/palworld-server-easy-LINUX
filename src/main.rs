@@ -74,14 +74,14 @@ fn install() {
                     "Failed to create steam user: {}",
                     String::from_utf8_lossy(&output.stderr)
                 );
-                process::exit(1);
+                if !String::from_utf8_lossy(&output.stderr).contains("'steam' already exists") {
+                    process::exit(1);
+                }
             }
         }
         Err(e) => {
             eprintln!("Error executing command: {}", e);
-            if !e.to_string().contains("'steam' already exists") {
-                process::exit(1);
-            }
+            process::exit(1);
         }
     }
 
