@@ -63,13 +63,24 @@ fn install() {
     let create_user = Command::new("su")
         .arg("-c")
         .arg("useradd -m steam && passwd steam")
-        .output()
-        .expect("Unable to install sudo and add user.");
-    if create_user.status.success() {
-        println!("Create steam user!")
-    } else {
-        println!("Unable to create steam user :(");
-        process::exit(1);
+        .output();
+
+    match create_user {
+        Ok(output) => {
+            if output.status.success() {
+                println!("Created steam user!");
+            } else {
+                eprintln!(
+                    "Failed to create steam user: {}",
+                    String::from_utf8_lossy(&output.stderr)
+                );
+                process::exit(1);
+            }
+        }
+        Err(e) => {
+            eprintln!("Error executing command: {}", e);
+            process::exit(1);
+        }
     }
 
     let change_user = Command::new("sudo")
