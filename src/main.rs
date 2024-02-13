@@ -79,7 +79,9 @@ fn install() {
         }
         Err(e) => {
             eprintln!("Error executing command: {}", e);
-            process::exit(1);
+            if !e.to_string().contains("'steam' already exists") {
+                process::exit(1);
+            }
         }
     }
 
