@@ -62,7 +62,7 @@ fn install() {
 
     let create_user = Command::new("su")
         .arg("-c")
-        .arg("apt install sudo && useradd -m steam && passwd steam")
+        .arg("useradd -m steam && passwd steam")
         .output()
         .expect("Unable to install sudo and add user.");
     if create_user.status.success() {
